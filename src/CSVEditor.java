@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class CSVEditor {
 
     public void editRecord(GUI gui) throws Exception {
+
         java.util.Date date = new Date();
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         boolean gefunden = false;
@@ -19,40 +20,42 @@ public class CSVEditor {
 
             while (s.hasNextLine()) {
                 String[] y = s.nextLine().split(";");
+                if (!(y[0] == null || y[0].equals(""))) {
+                    if (y[0].equals(
+                            localDate.getDayOfMonth() + "." + localDate.getMonthValue() + "." + localDate.getYear())) {
+                        gefunden = true;
+                        out.println();
+                        out.print(y[0] + ";");
+                        switch (y.length) {
+                            case 1: // if the first time is empty
+                                gui.GUImaker("Geben Sie die Startzeit ein: (H:M)");
+                                while (gui.inputTime == null) {
+                                    Thread.sleep(100);
+                                }
+                                out.print(gui.inputTime + ";");
+                                break;
+                            case 2: // if the second time is empty
+                                gui.GUImaker("Sie haben um " + y[1]
+                                        + " angefangen zu Arbeiten--- Geben Sie die Endzeit ein: (H:M)");
+                                while (gui.inputTime == null) {
+                                    Thread.sleep(100);
+                                }
+                                String x = gui.inputTime;
+                                out.print(y[1] + ";");
+                                out.print(x + ";");
+                                out.print(stringtoZeit(x).diff(stringtoZeit(y[1])).toString() + ";");
+                                out.print(
+                                        stringtoZeit(x).diff(stringtoZeit(y[1])).diff(stringtoZeit("07:12")).toString()
+                                                + ";");
+                                break;
+                            default:
+                                break;
+                        }
 
-                if (y[0].equals(
-                        localDate.getDayOfMonth() + "." + localDate.getMonthValue() + "." + localDate.getYear())) {
-                    gefunden = true;
-                    out.println();
-                    out.print(y[0] + ";");
-                    switch (y.length) {
-                        case 1: // if the first time is empty
-                            gui.GUImaker("Geben Sie die Startzeit ein: (H:M)");
-                            while (gui.inputTime == null) {
-                                Thread.sleep(100);
-                            }
-                            out.print(gui.inputTime + ";");
-                            break;
-                        case 2: // if the second time is empty
-                            gui.GUImaker("Sie haben um " + y[1]
-                                    + " angefangen zu Arbeiten--- Geben Sie die Endzeit ein: (H:M)");
-                            while (gui.inputTime == null) {
-                                Thread.sleep(100);
-                            }
-                            String x = gui.inputTime;
-                            out.print(y[1] + ";");
-                            out.print(x + ";");
-                            out.print(stringtoZeit(x).diff(stringtoZeit(y[1])).toString() + ";");
-                            out.print(stringtoZeit(x).diff(stringtoZeit(y[1])).diff(stringtoZeit("07:12")).toString()
-                                    + ";");
-                            break;
-                        default:
-                            break;
+                    } else {
+                        out.print(y[0] + ";" + y[1] + ";" + y[2] + ";" + y[3] + ";" + y[4] + ";");// Zeit1// Zeit2//
+                                                                                                  // arbeitszeit// net
                     }
-
-                } else {
-                    out.print(y[0] + ";" + y[1] + ";" + y[2] + ";" + y[3] + ";" + y[4] + ";");// Zeit1// Zeit2//
-                                                                                              // arbeitszeit// net
                 }
             }
 
