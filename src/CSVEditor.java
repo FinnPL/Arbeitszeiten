@@ -1,6 +1,7 @@
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -17,9 +18,13 @@ public class CSVEditor {
 
         try {
             PrintWriter out = new PrintWriter("temp.csv");// create a temp file
+            File filel = new File("arbeitszeiten.csv");
+            long lines = Files.lines(filel.toPath()).count();
+            gui.addProgressbar((int) lines);
             Scanner s = new Scanner(new File("Arbeitszeiten.csv")); // open file
 
             while (s.hasNextLine()) {
+                gui.updateProgressbar();
                 String[] y = s.nextLine().split(";");
                 if (!(y[0] == null || y[0].equals(""))) {
                     if (y[0].equals(
@@ -57,9 +62,6 @@ public class CSVEditor {
                         for (String string : y) {
                             out.print(string + ";");
                         }
-                        // out.print(y[0] + ";" + y[1] + ";" + y[2] + ";" + y[3] + ";" + y[4] + ";");//
-                        // Zeit1// Zeit2//
-                        // arbeitszeit// net
                     }
                 }
             }
@@ -85,7 +87,7 @@ public class CSVEditor {
 
         } catch (
 
-                FileNotFoundException | ParseException | InterruptedException e) {
+                ParseException | InterruptedException | IOException e) {
             System.out.println("Error " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -94,7 +96,16 @@ public class CSVEditor {
     }
 
     public Zeit stringtoZeit(String zeit) {
-        String[] x = zeit.split(":");
-        return new Zeit(Integer.parseInt(x[1]), Integer.parseInt(x[0]));
+        Zeit y;
+        try {
+            String[] x = zeit.split(":");
+            y = new Zeit(Integer.parseInt(x[0]), Integer.parseInt(x[1]));
+        } catch (Exception e) {
+            System.out.println("Error " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return y;
+
     }
 }

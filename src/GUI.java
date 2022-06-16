@@ -5,39 +5,55 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.text.MaskFormatter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 
 public class GUI implements ActionListener {
-    JFormattedTextField ftf;
-    String inputTime;
-    MaskFormatter formatter;
-    JFrame frame;
+    public String inputTime;
+
+    private JFormattedTextField ftf;
+    private MaskFormatter formatter;
+    private JFrame frame;
+    private JFrame Mframe;
+    private JProgressBar progressBar;
+    private JPanel Mpanel;
 
     public GUI() {
-        frame = new JFrame("Arbeitszeiten");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 400);
-        frame.setVisible(true);
-        frame.setResizable(false);
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        frame.add(panel);
+        Mframe = new JFrame("Arbeitszeiten");
+        Mframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Mframe.setSize(400, 400);
+        Mframe.setVisible(true);
+        Mframe.setResizable(false);
+        Mpanel = new JPanel();
+        Mpanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        Mframe.add(Mpanel);
         JLabel label = new JLabel("Lade CSV Datei");
-        panel.add(label);
+        Mpanel.add(label);
         CSVEditor csv = new CSVEditor();
         try {
             csv.editRecord(this);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(frame,
+            JOptionPane.showMessageDialog(Mframe,
                     "Error: " + e.getMessage(),
                     "Fatal Error",
                     JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
 
+    }
+
+    public void addProgressbar(int max) {
+        Mpanel.add(progressBar = new JProgressBar(0, max));
+        progressBar.setValue(0);
+        progressBar.setStringPainted(true);
+        Mframe.pack();
+    }
+
+    public void updateProgressbar() {
+        progressBar.setValue(progressBar.getValue() + 1);
     }
 
     public void GUImaker(String info) throws ParseException {
