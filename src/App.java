@@ -1,6 +1,7 @@
 public class App {
     public static void main(String[] args) throws Exception {
-        CSVEditor csv = new CSVEditor();
-        csv.editRecord(new GUI());
+        new GUI();
+        // CSVEditor csv = new CSVEditor();
+        // csv.editRecord(new GUI());
     }
 }

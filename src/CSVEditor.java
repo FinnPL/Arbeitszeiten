@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -8,7 +9,7 @@ import java.util.Scanner;
 
 public class CSVEditor {
 
-    public void editRecord(GUI gui) throws Exception {
+    public void editRecord(GUI gui) {
 
         java.util.Date date = new Date();
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -53,8 +54,12 @@ public class CSVEditor {
                         }
 
                     } else {
-                        out.print(y[0] + ";" + y[1] + ";" + y[2] + ";" + y[3] + ";" + y[4] + ";");// Zeit1// Zeit2//
-                                                                                                  // arbeitszeit// net
+                        for (String string : y) {
+                            out.print(string + ";");
+                        }
+                        // out.print(y[0] + ";" + y[1] + ";" + y[2] + ";" + y[3] + ";" + y[4] + ";");//
+                        // Zeit1// Zeit2//
+                        // arbeitszeit// net
                     }
                 }
             }
@@ -80,9 +85,10 @@ public class CSVEditor {
 
         } catch (
 
-        FileNotFoundException e) {
-            System.out.println("Datei nicht gefunden " + e.getMessage());
+                FileNotFoundException | ParseException | InterruptedException e) {
+            System.out.println("Error " + e.getMessage());
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
     }
