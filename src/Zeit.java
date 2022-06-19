@@ -3,7 +3,7 @@ public class Zeit {
     private int minuten;
 
     public Zeit(int stunden, int minuten) {
-        if (minuten < 0 || stunden < 0 || stunden > 24 || minuten > 59) {
+        if (stunden > 24 || minuten > 59) {
             throw new IllegalArgumentException("Minuten und Stunden müssen positiv und kleiner 24h und 59 min sein");
         }
         this.minuten = minuten;

@@ -1,5 +1,6 @@
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -10,6 +11,7 @@ import javax.swing.text.MaskFormatter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.file.NoSuchFileException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -40,8 +42,29 @@ public class GUI implements ActionListener {
         try {
             java.util.Date date = new Date();
             LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            File file = new File("arbeitszeiten.csv");
-            csv.load(file, this);
+            jsonEditor json = new jsonEditor();
+            try {
+                String path = json.getPath();
+                File file = new File(path);
+                csv.load(file, this);
+            } catch (Exception e) {
+                if (e instanceof NoSuchFileException) {
+                    final JFileChooser fc = new JFileChooser();
+                    int x = fc.showOpenDialog(null);
+                    if (x == JFileChooser.APPROVE_OPTION) {
+                        File file = fc.getSelectedFile();
+                        csv.load(file, this);
+                        json.create(file, json.getBreaktime(), json.getWorktime());
+                    }
+                } else {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(Mframe, "Error: " + e.getMessage(), "Fatal Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            String path = json.getPath();
+            File file = new File(path);
+
             csv.edit(this, localDate.getDayOfMonth() + "." + localDate.getMonthValue() + "." + localDate.getYear());
             csv.save(file, this);
             return;
