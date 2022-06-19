@@ -25,7 +25,7 @@ public class Zeit {
             diffMinuten += 60;
             diffStunden--;
         }
-        return new Zeit(diffMinuten, diffStunden);
+        return new Zeit(diffStunden, diffMinuten);
     }
 
     public String toString() {

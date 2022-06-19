@@ -9,7 +9,11 @@ import javax.swing.JProgressBar;
 import javax.swing.text.MaskFormatter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class GUI implements ActionListener {
     public String inputTime;
@@ -34,7 +38,13 @@ public class GUI implements ActionListener {
         Mpanel.add(label);
         CSVEditor csv = new CSVEditor();
         try {
-            csv.editRecord(this);
+            java.util.Date date = new Date();
+            LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            File file = new File("arbeitszeiten.csv");
+            csv.load(file, this);
+            csv.edit(this, localDate.getDayOfMonth() + "." + localDate.getMonthValue() + "." + localDate.getYear());
+            csv.save(file, this);
+            return;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(Mframe,
                     "Error: " + e.getMessage(),
@@ -56,7 +66,7 @@ public class GUI implements ActionListener {
         progressBar.setValue(progressBar.getValue() + 1);
     }
 
-    public void GUImaker(String info) throws ParseException {
+    public void guiMaker(String info) throws ParseException {
         frame = new JFrame();
         JLabel label = new JLabel(info);
         JPanel panel = new JPanel();
